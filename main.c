@@ -149,9 +149,16 @@ int main(int argc, char *argv[])
             for (i = 0; i < 2; i++)
                 ds_values[i] = wb_distance_sensor_get_value(ds[i]);
             
+            // // Update the data of the floor sensors
+            // for (i = 0; i < 2; i++)
+            //     fs_values[i] = wb_distance_sensor_get_value(fs[i]);
+
             // Update the data of the floor sensors
             for (i = 0; i < 2; i++)
+            {
                 fs_values[i] = wb_distance_sensor_get_value(fs[i]);
+                printf("Value of %s : %d\n",fs_names[i],fs_values[i]);
+            }
                 
             // Update the data of the light sensors
             for (i = 0; i < 3; i++)
@@ -169,7 +176,7 @@ int main(int argc, char *argv[])
                 }
             }
             // Print the sensor detecting the most light and it's value
-            printf("Light Sensor with more light = %d value: %d\n", light_index, ls_values[light_index]);
+            //printf("Light Sensor with more light = %d value: %d\n", light_index, ls_values[light_index]);
             // If the light is on the left
             if(light_index == 0)
             {
@@ -193,10 +200,10 @@ int main(int argc, char *argv[])
             }
             
             // If there is something on the left (wall or no more floor)
-            if (ds_values[0] < 950.0 || fs_values[0] > 10.0)
+            if (ds_values[0] < 950.0 || fs_values[0] < 60.0)
                 avoid_obstacle_counter_right = 50;  // Go backward right for the specified time
             // If there is something on the right (wall or no more floor)
-            else if (ds_values[1] < 950.0  || fs_values[1] > 10.0)
+            else if (ds_values[1] < 950.0  || fs_values[1] < 60.0)
                 avoid_obstacle_counter_left = 50;  // Go backward left for the specified time
         }
 
@@ -212,12 +219,12 @@ int main(int argc, char *argv[])
         //printf("Blue LED brightness = %d \n", led_brightness);
 
         // For the left LED
-        printf("Left LED = ");
+        // printf("Left LED = ");
         if(left_speed >= 0)
         {
             // Turn the green led on
             wb_led_set(leds[0], 0x007f00);
-            printf("Forward Mode\n");
+            // printf("Forward Mode\n");
         }
         else
         {
@@ -230,15 +237,15 @@ int main(int argc, char *argv[])
                 else
                     wb_led_set(leds[0], 0xff0000);
             }
-            printf("Backward Mode\n");
+            // printf("Backward Mode\n");
         }
 
         // For the right LED
-        printf("Right LED = ");
+        // printf("Right LED = ");
         if(right_speed >= 0)
         {
             wb_led_set(leds[2], 0x007f00);
-            printf("Forward Mode\n");
+            // printf("Forward Mode\n");
         }
         else
         {
@@ -250,7 +257,7 @@ int main(int argc, char *argv[])
                 else
                     wb_led_set(leds[2], 0xff0000);
             }
-            printf("Backward Mode\n");
+            // printf("Backward Mode\n");
         }
 
         // For the LED in the middle
@@ -265,7 +272,7 @@ int main(int argc, char *argv[])
         
         // Update the counter
         counter++;
-        printf("Counter : %d\n",counter);
+        // printf("Counter : %d\n",counter);
     }
     wb_robot_cleanup();
     return 0;  // EXIT_SUCCESS

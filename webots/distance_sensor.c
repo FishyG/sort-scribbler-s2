@@ -42,8 +42,8 @@ int wb_distance_sensor_get_value(int sensor)
     else if (sensor >= 2)
     {
         // Run the ir led
-        _dira(1 << 12, 1 << 12);
-        _outa(1 << 12, 0);
+        // _dira(1 << 12, 1 << 12);
+        // _outa(1 << 12, 1 << 12);
 
         if(sensor == 2)
         {
@@ -51,13 +51,15 @@ int wb_distance_sensor_get_value(int sensor)
             _outa(0xf << 22, 0);
             _outa(MUX_SELECT, MUX_SELECT);
             _outa(MUX_CHANNEL2, MUX_CHANNEL2);
+            _outa(MUX_CHANNEL0, MUX_CHANNEL0);
+            _outa(MUX_CHANNEL1, MUX_CHANNEL1);
         }
         else if(sensor == 3)
         {
             // Select Line_Right_Ang on the Mux
             _outa(0xf << 22, 0);
             _outa(MUX_SELECT, MUX_SELECT);
-            _outa(MUX_CHANNEL0, MUX_CHANNEL0);
+            _outa(MUX_CHANNEL2, MUX_CHANNEL2);
             _outa(MUX_CHANNEL1, MUX_CHANNEL1);
         }
         _waitcnt(_clockfreq()/20 +_cnt()); // Wait 50 ms for the analog conversion to happen
