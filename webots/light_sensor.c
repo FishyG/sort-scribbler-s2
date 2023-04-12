@@ -13,6 +13,7 @@ extern long sigma;
 
 int wb_light_sensor_get_value(int sensor)
 {
+    printf("fdfd%d\n",sensor);
     if(sensor == 0)
     {
         // Select Light_Left_Ang on the Mux
@@ -23,12 +24,14 @@ int wb_light_sensor_get_value(int sensor)
     }
     else if(sensor == 1)
     {
+        // Select Light_Right_Ang on the Mux
         _outa(0xf << 22, 0);
         _outa(MUX_SELECT, MUX_SELECT);
         _outa(MUX_CHANNEL0, MUX_CHANNEL0);
     }
     else if(sensor == 2)
     {
+        // Select Light_Center_Ang on the Mux
         _outa(0xf << 22, 0);
         _outa(MUX_SELECT, MUX_SELECT);
         _outa(MUX_CHANNEL1, MUX_CHANNEL1);

@@ -74,6 +74,22 @@ int wb_robot_get_device(const char* device)
     {
         return_value = 1;
     }
+    else if (strcmp(device,"ds_left") == 0)
+    {
+        return_value = 0;
+    }
+    else if (strcmp(device,"ds_right") == 0)
+    {
+        return_value = 1;
+    }
+    else if (strcmp(device,"fs_left") == 0)
+    {
+        return_value = 2;
+    }
+    else if (strcmp(device,"fs_right") == 0)
+    {
+        return_value = 3;
+    }
     
 
     return return_value;
@@ -85,21 +101,27 @@ int wb_robot_init()
     unsigned long stack_pwm_led[150]; // Stack pour le cog qui exécutera fct_pwm1
 
     printf("Starting up... \n");
-    _dira(0xf << 22, 0xf << 22);
-    _outa(0xf << 22, 0);
+    
     printf("ADC started on cog %d\n",_coginit((long)&sigma >> 2, (int)labyrinthe_array >> 2, ANY_COG)); // Start the ADC on a cog
+    _dira(0xf << 22, 0xf << 22);    // Set the control for the MUX as output
+    
+    // Set MUX of the adc to gnd (improve the range of the adc)
+    _outa(0xf << 22, 0);
+    _outa(MUX_CHANNEL2, MUX_CHANNEL2);  
+
     printf("Motor PWM started on cog %d\n",_coginit_C(&fct_pwm_all, &stack_pwm_motor[150])); // Start the pwm 0 on a cog
     printf("LED PWM started on cog %d\n",_coginit_C(&del_shift_pwm, &stack_pwm_led[150])); // Start the pwm 0 on a cog
-    // _outa(1 << MUX_SELECT, 0);
-    // _outa(1 << MUX_CHANNEL2, 1 << MUX_CHANNEL2);
-    // _waitcnt(_clockfreq()/10 +_cnt()); // Delay 100 ms
+    
+    //play("Mario", 200, 21); // Play music instead of just waiting for the adc
+    _waitcnt(_clockfreq()/10 +_cnt()); // Delay 100 ms for the adc
+    
     printf("Exiting robot init\n");
     return 0;
 }
 
 void wb_robot_cleanup(void)
 {
-
+    // Do nothing
 }
 
 int wb_robot_step(int duration)
@@ -108,7 +130,7 @@ int wb_robot_step(int duration)
     return duration;
 }
 
-int step_counter(int counter)
+int step_counter(int step_counter)
 {
-    
+    return step_counter;
 }

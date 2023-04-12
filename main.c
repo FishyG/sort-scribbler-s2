@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     char wheels_names[2][8] = {"wheel1", "wheel2"};
 
     wb_robot_init();
-
+    
     // ################################################ 
     // ############ Devices initialization ############ 
     // ################################################ 
@@ -107,6 +107,19 @@ int main(int argc, char *argv[])
     * Perform simulation steps of TIME_STEP milliseconds
     * and leave the loop when the simulation is over
     */
+    /*while (1)
+    {
+        wb_led_set(leds[0], 0x007f00);
+        _waitcnt(_clockfreq()*2 +_cnt()); // Delay 10 ms
+
+        // Update the data of the floor sensors
+        for (i = 0; i < 3; i++)
+        {
+            ls_values[i] = wb_light_sensor_get_value(ls[i]);
+            printf("Value of %s : %d\n",ls_names[i],fs_values[i]);
+        }
+    }*/
+
     while (wb_robot_step(TIME_STEP) != -1) {
         // Reset the speed to it's default
         left_speed = 1.0;
@@ -115,7 +128,6 @@ int main(int argc, char *argv[])
         // If either one of the counter are not yet done it will decrease them by 1
         if (avoid_obstacle_counter_right > 0 || avoid_obstacle_counter_left > 0) 
         {
-            printf("Inside avoid loop\n");
             if (avoid_obstacle_counter_right > 0)
             {
                 // Put the motors in reverse and turn slightly
@@ -133,17 +145,17 @@ int main(int argc, char *argv[])
         }
         else 
         {
-            // // Update the data of the distance sensors
-            // for (i = 0; i < 2; i++)
-            //     ds_values[i] = wb_distance_sensor_get_value(ds[i]);
+            // Update the data of the distance sensors
+            for (i = 0; i < 2; i++)
+                ds_values[i] = wb_distance_sensor_get_value(ds[i]);
             
-            // // Update the data of the floor sensors
-            // for (i = 0; i < 2; i++)
-            //     fs_values[i] = wb_distance_sensor_get_value(fs[i]);
+            // Update the data of the floor sensors
+            for (i = 0; i < 2; i++)
+                fs_values[i] = wb_distance_sensor_get_value(fs[i]);
                 
-            // // Update the data of the light sensors
-            // for (i = 0; i < 3; i++)
-            //     ls_values[i] = wb_light_sensor_get_value(ls[i]);
+            // Update the data of the light sensors
+            for (i = 0; i < 3; i++)
+                ls_values[i] = wb_light_sensor_get_value(ls[i]);
             
             ls_max = ls_values[0];
             light_index = 0;
@@ -181,10 +193,10 @@ int main(int argc, char *argv[])
             }
             
             // If there is something on the left (wall or no more floor)
-            if (ds_values[0] < 950.0 || fs_values[0] > 550.0)
+            if (ds_values[0] < 950.0 || fs_values[0] > 10.0)
                 avoid_obstacle_counter_right = 50;  // Go backward right for the specified time
             // If there is something on the right (wall or no more floor)
-            else if (ds_values[1] < 950.0  || fs_values[1] > 550.0)
+            else if (ds_values[1] < 950.0  || fs_values[1] > 10.0)
                 avoid_obstacle_counter_left = 50;  // Go backward left for the specified time
         }
 
@@ -203,7 +215,7 @@ int main(int argc, char *argv[])
         printf("Left LED = ");
         if(left_speed >= 0)
         {
-            // Turn the
+            // Turn the green led on
             wb_led_set(leds[0], 0x007f00);
             printf("Forward Mode\n");
         }
@@ -241,11 +253,11 @@ int main(int argc, char *argv[])
             printf("Backward Mode\n");
         }
 
-        // // For the LED in the middle
-        // if(abs(left_speed) == abs(right_speed))
-        //     wb_led_set(leds[1], 0x00ff00);
-        // else
-        //     wb_led_set(leds[1], 0);
+        // For the LED in the middle
+        if(abs(left_speed) == abs(right_speed))
+            wb_led_set(leds[1], 0x00ff00);
+        else
+            wb_led_set(leds[1], 0);
         
         // Apply the speed to the motors
         wb_motor_set_velocity(wheels[0], left_speed);

@@ -26,16 +26,16 @@ int wb_motor_set_position(short wheel, int idk)
 
 int wb_motor_set_velocity(short wheel, int speed)
 {
-    // if (wheel == 0)
-    // {
-    //     dir0 = (speed < 0) ? 1 : 0;
-    //     speed0 = abs(speed);
-    // }
-    // else if (wheel == 1)
-    // {
-    //     dir1 = (speed < 0) ? 1 : 0;
-    //     speed1 = abs(speed);
-    // }
+    if (wheel == 0)
+    {
+        dir0 = (speed < 0) ? 0 : 1;
+        speed0 = abs(speed) * 20;
+    }
+    else if (wheel == 1)
+    {
+        dir1 = (speed < 0) ? 0 : 1;
+        speed1 = abs(speed) * 20;
+    }
     
     return 0;
 }

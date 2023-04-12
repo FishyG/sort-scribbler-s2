@@ -26,14 +26,18 @@ void del_shift_pwm(void)
     {
         while(i < 5)
         {
-            for (j = 0; j < 8; j++)
+            for (j = 8; j > 0; j--)
             {
                 // If the intensity is greater than i turn the LED "on" else turn it "off"
                 _outa(LED_DATA, (intensite_del[j] > i) ? LED_DATA : 0);
                 
                 // Send a pulse on the clock pin
-                _outa(LED_CLK,LED_CLK);
-                _outa(LED_CLK,0);
+                // _outa(LED_CLK,LED_CLK);
+                // _outa(LED_CLK,0);
+
+                // Same as _outa but a tiny bit faster
+                PASM("or outa, #256");    // set LED_CLK pin high
+                PASM("andn outa, #256");  // set LED_CLK pin low
             }
             i++;
             _waitcnt(_clockfreq()/500 +_cnt()); // Delay 10 ms
@@ -58,6 +62,7 @@ void wb_led_set(short led, int color)
     // }
     // printf("\n");
     
+    // For the left led
     if(led == 0)
     {
         if(color > 0xff00)
@@ -71,9 +76,19 @@ void wb_led_set(short led, int color)
             intensite_del[4] = ((color >> 8)/51);
         }
     }
+    // For the center led
     else if(led == 1)
     {
-        intensite_del[3] = (color/51);
+        if(color > 0xff00)
+        {
+            intensite_del[1] = ((color >> 16)/51);
+            intensite_del[2] = 0;
+        }
+        else
+        {
+            intensite_del[1] = 0;
+            intensite_del[2] = ((color >> 8)/51);
+        }
     }
     // For the right led
     else if(led == 2)
@@ -92,8 +107,7 @@ void wb_led_set(short led, int color)
     }
     else if(led == 3)
     {
-        //intensite_del[] = (color/51);
-
+        intensite_del[0] = (color/51);
     }
 }
 
@@ -103,11 +117,11 @@ int wb_led_get(short tag)
 
     if(tag == 0)
     {
-        return_value = intensite_del[3] | intensite_del[4]  ;
+        return_value = intensite_del[3] | intensite_del[4];
     }
     else if(tag == 1)
     {
-        
+        return_value = intensite_del[1] | intensite_del[2];
     }
     // For the right led
     else if(tag == 2)
@@ -116,7 +130,7 @@ int wb_led_get(short tag)
     }
     else if(tag == 3)
     {
-        return_value = intensite_del[7];
+        return_value = intensite_del[0];
 
     }
     return return_value;
