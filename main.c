@@ -32,6 +32,7 @@
 int main(int argc, char *argv[])
 {
     int i = 0;
+    int deeznuts = 0;
     int counter = 0;
     int light_index = 0;
     int avoid_obstacle_counter_right = 0;   // Counter for the right turn action
@@ -126,7 +127,7 @@ int main(int argc, char *argv[])
         right_speed = 1.0;
 
         // If either one of the counter are not yet done it will decrease them by 1
-        if (avoid_obstacle_counter_right > 0 || avoid_obstacle_counter_left > 0) 
+        if (avoid_obstacle_counter_right > 0 || avoid_obstacle_counter_left > 0 || deeznuts) 
         {
             if (avoid_obstacle_counter_right > 0)
             {
@@ -141,6 +142,13 @@ int main(int argc, char *argv[])
                 left_speed = -2;
                 right_speed = -3.5;
                 avoid_obstacle_counter_left--;  // Decrease the time to move by 1
+            }
+            else if (deeznuts)
+            {
+                // Put the motors in reverse and turn slightly
+                left_speed = 5;
+                right_speed = -5;
+                deeznuts--;  // Decrease the time to move by 1
             }
         }
         else 
@@ -159,6 +167,7 @@ int main(int argc, char *argv[])
                 fs_values[i] = wb_distance_sensor_get_value(fs[i]);
                 printf("Value of %s : %d\n",fs_names[i],fs_values[i]);
             }
+            //printf("Balls : %d\n",wb_distance_sensor_get_value(69));
                 
             // Update the data of the light sensors
             for (i = 0; i < 3; i++)
@@ -195,28 +204,38 @@ int main(int argc, char *argv[])
             else if (light_index == 2)
             {
                 // Go straight (faster)
-                left_speed = 5.0;
-                right_speed = 5.0;
+                left_speed = 3.0;
+                right_speed = 3.0;
             }
             
             // If there is something on the left (wall or no more floor)
-            if (ds_values[0] < 950.0 || fs_values[0] < 60.0)
+            if (ds_values[0] < 950.0 || fs_values[0] < 20.0)
                 avoid_obstacle_counter_right = 50;  // Go backward right for the specified time
             // If there is something on the right (wall or no more floor)
-            else if (ds_values[1] < 950.0  || fs_values[1] < 60.0)
+            else if (ds_values[1] < 950.0  || fs_values[1] < 20.0)
                 avoid_obstacle_counter_left = 50;  // Go backward left for the specified time
+        
+            if(wb_distance_sensor_get_value(69) >= 40)
+            {
+                //printf("damn : %d\n",wb_distance_sensor_get_value(69));
+                // _waitcnt(_clockfreq() / 1000 * 1000 + _cnt()); // Wait 1000 ms
+                if((wb_distance_sensor_get_value(69)+wb_distance_sensor_get_value(69))/2 >= 35)
+                {
+                    deeznuts = 5;
+                }
+            }
         }
 
         // For the blue LED
         //  Vitesse moyenne = (3 + |-1|) / 2 = 2 rad/s
         //  Intensité lumineuse = Vitesse moyenne / Vitesse maximale * 100% = 2/4 *100% = 50%
         avg_speed = (abs(left_speed) + abs(right_speed)) / 2;
-        led_brightness = avg_speed / 5 * 255;
+        led_brightness = avg_speed;
         
         // Turn the Blue LED with the specified brightness
         wb_led_set(leds[3], 0x0000ff & led_brightness);
-        //printf("Moyenne = %d \n", avg_speed);
-        //printf("Blue LED brightness = %d \n", led_brightness);
+        // printf("Moyenne = %d \n", avg_speed);
+        // printf("Blue LED brightness = %d \n", led_brightness);
 
         // For the left LED
         // printf("Left LED = ");
@@ -265,14 +284,14 @@ int main(int argc, char *argv[])
             wb_led_set(leds[1], 0x00ff00);
         else
             wb_led_set(leds[1], 0);
-        
+
         // Apply the speed to the motors
         wb_motor_set_velocity(wheels[0], left_speed);
         wb_motor_set_velocity(wheels[1], right_speed);
         
         // Update the counter
         counter++;
-        // printf("Counter : %d\n",counter);
+        //printf("Counter : %d\n",_cnt());
     }
     wb_robot_cleanup();
     return 0;  // EXIT_SUCCESS

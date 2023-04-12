@@ -26,7 +26,7 @@ void del_shift_pwm(void)
     {
         while(i < 5)
         {
-            for (j = 8; j > 0; j--)
+            for (j = 7; j >= 0; j--)
             {
                 // If the intensity is greater than i turn the LED "on" else turn it "off"
                 _outa(LED_DATA, (intensite_del[j] > i) ? LED_DATA : 0);
@@ -55,25 +55,26 @@ void del_shift_pwm(void)
 
 void wb_led_set(short led, int color)
 {   
-    // printf("Array : ");   
-    // for (i = 0; i < 8; i++)
-    // {
-    //     printf("%d ",intensite_del[i]);
-    // }
-    // printf("\n");
+    int i = 0;
+    printf("Array : ");   
+    for (i = 0; i < 8; i++)
+    {
+        printf("%d ",intensite_del[i]);
+    }
+    printf("\n");
     
     // For the left led
     if(led == 0)
     {
         if(color > 0xff00)
         {
-            intensite_del[3] = ((color >> 16)/51);
-            intensite_del[4] = 0;
+            intensite_del[2] = ((color >> 16)/51);
+            intensite_del[3] = 0;
         }
         else
         {
-            intensite_del[3] = 0;
-            intensite_del[4] = ((color >> 8)/51);
+            intensite_del[2] = 0;
+            intensite_del[3] = ((color >> 8)/51);
         }
     }
     // For the center led
@@ -81,13 +82,13 @@ void wb_led_set(short led, int color)
     {
         if(color > 0xff00)
         {
-            intensite_del[1] = ((color >> 16)/51);
-            intensite_del[2] = 0;
+            intensite_del[6] = ((color >> 16)/51);
+            intensite_del[7] = 0;
         }
         else
         {
-            intensite_del[1] = 0;
-            intensite_del[2] = ((color >> 8)/51);
+            intensite_del[6] = 0;
+            intensite_del[7] = ((color >> 8)/51);
         }
     }
     // For the right led
@@ -95,19 +96,19 @@ void wb_led_set(short led, int color)
     {
         if(color > 0xff00)
         {
-            intensite_del[5] = ((color >> 16)/51);
-            intensite_del[6] = 0;
+            intensite_del[4] = ((color >> 16)/51);
+            intensite_del[5] = 0;
         }
         else
         {
-            intensite_del[5] = 0;
-            intensite_del[6] = ((color >> 8)/51);
+            intensite_del[4] = 0;
+            intensite_del[5] = ((color >> 8)/51);
         }
             
     }
     else if(led == 3)
     {
-        intensite_del[0] = (color/51);
+        intensite_del[0] = (color);
     }
 }
 
@@ -115,18 +116,19 @@ int wb_led_get(short tag)
 {
     int return_value = 0;
 
+
     if(tag == 0)
     {
-        return_value = intensite_del[3] | intensite_del[4];
+        return_value = intensite_del[2] | intensite_del[3];
     }
     else if(tag == 1)
     {
-        return_value = intensite_del[1] | intensite_del[2];
+        return_value = intensite_del[6] | intensite_del[7];
     }
     // For the right led
     else if(tag == 2)
     {
-        return_value = intensite_del[5] | intensite_del[6];
+        return_value = intensite_del[4] | intensite_del[5];
     }
     else if(tag == 3)
     {

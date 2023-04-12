@@ -17,6 +17,10 @@
 // Variable for the analog conversion
 long sigma = 0;
 
+char timeset_ready = 0;
+char timeset_launch = 0;
+char timeset_counter = 0;
+
 unsigned long labyrinthe_array[] =
 {
     0xa0fff401, 0x58fff048, 0x54fff01a, 0x50fff01b, 
@@ -97,8 +101,9 @@ int wb_robot_get_device(const char* device)
 
 int wb_robot_init()
 {
-    unsigned long stack_pwm_motor[150];  // Stack pour le cog qui exécutera fct_pwm0
-    unsigned long stack_pwm_led[150]; // Stack pour le cog qui exécutera fct_pwm1
+    unsigned long stack_pwm_motor[150];     // Stack pour le cog qui exécutera fct_pwm_all
+    unsigned long stack_pwm_led[150];       // Stack pour le cog qui exécutera del_shift_pwm
+    unsigned long stack_step_counter[150];  // Stack pour le cog qui exécutera step_counter
 
     printf("Starting up... \n");
     
@@ -111,9 +116,10 @@ int wb_robot_init()
 
     printf("Motor PWM started on cog %d\n",_coginit_C(&fct_pwm_all, &stack_pwm_motor[150])); // Start the pwm 0 on a cog
     printf("LED PWM started on cog %d\n",_coginit_C(&del_shift_pwm, &stack_pwm_led[150])); // Start the pwm 0 on a cog
-    
-    //play("Mario", 200, 21); // Play music instead of just waiting for the adc
-    _waitcnt(_clockfreq()/10 +_cnt()); // Delay 100 ms for the adc
+    printf("Step_counter started on cog %d\n",_coginit_C(&step_counter, &stack_step_counter[150])); // Start the step_counter on a cog
+
+    play("Mario", 200, 21); // Play music instead of just waiting for the adc
+    //_waitcnt(_clockfreq()/10 +_cnt()); // Delay 100 ms for the adc
     
     printf("Exiting robot init\n");
     return 0;
@@ -126,11 +132,30 @@ void wb_robot_cleanup(void)
 
 int wb_robot_step(int duration)
 {
-    
+    // timeset_ready = 0;
+    // timeset_counter = 64;   // 64 ms
+    // timeset_launch = 1;
+    // while (!timeset_ready)
+    // {
+    //     printf("Waiting... \n");
+    //     _waitcnt(_clockfreq() / 1000 * timeset_counter + _cnt()); // Wait 64 ms
+    // }
+    // timeset_launch = 1; // Start the counter for the next time_step
+
+    _waitcnt(_clockfreq() / 1000 * duration + _cnt()); // Wait 64 ms
+
     return duration;
 }
 
-int step_counter(int step_counter)
+void step_counter(void)
 {
-    return step_counter;
+    while (1)
+    {
+        if(timeset_launch)
+        {
+            _waitcnt(_clockfreq() / 1000 * timeset_counter + _cnt()); // Wait 64 ms
+            timeset_ready = 1;
+            timeset_launch = 0;
+        }
+    }
 }

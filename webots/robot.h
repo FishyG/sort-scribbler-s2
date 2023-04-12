@@ -34,6 +34,6 @@ int wb_robot_step(int duration);
 
 int wb_robot_get_device(const char* device);
 
-int step_counter(int step_counter);
+void step_counter(void);
 
 #endif	/* ROBOT_H */

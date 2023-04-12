@@ -62,7 +62,15 @@ int wb_distance_sensor_get_value(int sensor)
             _outa(MUX_CHANNEL2, MUX_CHANNEL2);
             _outa(MUX_CHANNEL1, MUX_CHANNEL1);
         }
-        _waitcnt(_clockfreq()/20 +_cnt()); // Wait 50 ms for the analog conversion to happen
+        else if(sensor == 69)
+        {
+            // Select Mot_I_Ang on the Mux
+            _outa(0xf << 22, 0);
+            // _outa(MUX_SELECT, 0);
+            // _outa(MUX_CHANNEL2, MUX_CHANNEL2);
+            // _outa(MUX_CHANNEL1, MUX_CHANNEL1);
+        }
+        _waitcnt(_clockfreq()/50 +_cnt()); // Wait 20 ms for the analog conversion to happen
         return_value = sigma;
     }
     else
