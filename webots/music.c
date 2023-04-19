@@ -1,8 +1,8 @@
 /* 
  * @file    music.c
- * @author  Jessy Grimard-Maheu
+ * @author  Pierre  Bergeron, Jessy Grimard-Maheu
  * @date    10 Avril 2023
- * @brief   music.c
+ * @brief   Joue de la musique (fait de Beep et des Boop). Fait par Pierre Bergeron. et modifier (légèrement) par Jessy.
  * @version 1.0 : Version initiale
  */
 
@@ -15,8 +15,7 @@ int BLANCHE = 2000;
 int NOIRE   = 1000;
 int TRIO    =  666;
 int CROCHE  =  500;
-
-int BUZZER  = 0000;
+int BUZZER  = 0000; // Pour le buzzer
 
 void play(char* music, unsigned int tempo, int pin)
 {
@@ -154,9 +153,4 @@ void StarWars(void){
     note(G, CROCHE/2);
     note(G, CROCHE/2);
     note(G, CROCHE);
-}
-
-void Rick(void)
-{
-
 }

@@ -1,8 +1,8 @@
-/* 
+/** 
  * @file    motor.h
  * @author  Jessy Grimard-Maheu
  * @date    15 Mars 2023
- * @brief   .h de motor.c
+ * @brief   .h de motor.c (voir motor.c pour le brief)
  * @version 1.0 : Version initiale
  */
 
@@ -18,12 +18,26 @@
 #define INFINITY 420
 
 //prototype
-int wb_motor_set_position(short wheel, int idk);
 
+/**
+    @brief Fonction pour définir la position des moteurs (non implémentée).
+    @param wheel Identifiant de la roue.
+    @param pos Valeur de la position.
+    @return 0 si tout s'est bien passé.
+*/
+int wb_motor_set_position(short wheel, int pos);
+
+/**
+    @brief Fonction pour définir la vélocité des moteurs.
+    @param wheel Identifiant de la roue.
+    @param speed Vitesse de la roue.
+    @return 0 si tout s'est bien passé.
+*/
 int wb_motor_set_velocity(short wheel, int speed);
 
-void fct_pwm0(void);
-void fct_pwm1(void);
+/**
+    @brief Fonction pour controller le pwm des moteurs.
+*/
 void fct_pwm_all(void);
 
 #endif	/* MOTOR_H */

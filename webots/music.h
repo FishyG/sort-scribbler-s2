@@ -27,9 +27,8 @@ void play(char* music, unsigned int tempo, int pin);
 void note(unsigned int note, unsigned int tempsms);
 void wait(unsigned int tempsms);
 
-void Rick(void);
-void Mario(void);
-void StarWars(void);
+void Mario(void);       // Musique de Mario
+void StarWars(void);    // Musique de StarsWars
 // void HarryPotter(void);
 // void LaFamilleTortue(void);
 
