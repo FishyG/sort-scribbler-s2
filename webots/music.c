@@ -37,10 +37,7 @@ void play(char* music, unsigned int tempo, int pin)
     //     LaFamilleTortue();
     // } else if (strcmp(music, "Harry Potter") == 0){
     //     HarryPotter();
-    } else if (strcmp(music, "Rick") == 0){
-        Rick();
     }
-
     // wait(BLANCHE);wait(BLANCHE);wait(BLANCHE);wait(BLANCHE);
 }
 

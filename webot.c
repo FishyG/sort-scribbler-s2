@@ -1,6 +1,6 @@
 /*
 ##########################################################################################################
-@file     scribbler_s2_collision_avoidance.c
+@file     webot.c
 ##########################################################################################################
 @author   Jessy-Grimard Maheu, 
 ##########################################################################################################
@@ -8,7 +8,8 @@
 ##########################################################################################################
 @brief    Programme permettant de contrôler le robot scribbler S2 dans l'environnement de Webots. Le 
           robot se déplace par lui-même et évite les obstacles tel que les murs ou une falaise. Lorsque
-          ces obstacles sont détectés, le robot recule un court instant et poursuit sa course.
+          ces obstacles sont détectés, le robot recule un court instant et poursuit sa course. CODE DE
+          BASE POUR WEBOT.
 ##########################################################################################################
        __
      <(o )___
